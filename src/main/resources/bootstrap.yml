@@ -5,9 +5,7 @@ server:
 call:
   divisor: ${call_divisor:0}
 runtime:
-  profile: LOCAL
-  
-message: LOCAL
+  profile: ${runtime.profile}
 
 spring:
   cloud: 

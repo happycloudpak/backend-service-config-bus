@@ -38,9 +38,6 @@ public class BackendController {
 	private int divisor;
 	private int calls = 0;
 	
-	@Value("${message}")
-	private String message;
-	
 	@GetMapping("/port")
 	@ApiOperation(value = "Return Port number")
 	public String port() {
