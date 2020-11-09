@@ -1,0 +1,21 @@
+# spring cloud bus 참고: https://coe.gitbook.io/guide/config/springcloudconfigbus
+
+server:
+  port: ${server_port:8001}
+call:
+  divisor: ${call_divisor:0}
+runtime:
+  profile: LOCAL
+  
+spring:
+  cloud: 
+    config:
+      uri: ${config_servers:http://localhost:9001}
+      searchPaths: backend-service-config-bus
+---
+spring:
+  application:
+    name: backend-service-config-bus
+  profiles:
+    active: local
+    include: common
