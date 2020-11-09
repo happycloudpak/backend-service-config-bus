@@ -1,5 +1,4 @@
 # spring cloud bus 참고: https://coe.gitbook.io/guide/config/springcloudconfigbus
-
 server:
   port: ${server_port:8001}
 call:

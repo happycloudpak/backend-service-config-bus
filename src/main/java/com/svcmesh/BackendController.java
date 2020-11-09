@@ -38,6 +38,9 @@ public class BackendController {
 	private int divisor;
 	private int calls = 0;
 	
+	@Value("${greeting}")
+	private String greeting;
+	
 	@GetMapping("/port")
 	@ApiOperation(value = "Return Port number")
 	public String port() {
@@ -101,10 +104,10 @@ public class BackendController {
 		return "["+port+"] => ["+baseUrl+"] " + response.getBody();
 	}
 	
-	@GetMapping("/message")
-	@ApiOperation(value = "Return message value in configuration using config server")
+	@GetMapping("/greeting")
+	@ApiOperation(value = "Return greeting value in configuration using config server")
 	public String message() {
-		return "Message: " + message;
+		return "Greeting: " + greeting;
 	}
 	
 	private static HttpEntity<?> getHeaders() throws IOException {
