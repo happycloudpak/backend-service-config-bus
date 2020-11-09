@@ -6,7 +6,7 @@ call:
 runtime:
   profile: ${runtime.profile}
 
-greeting: ${greeting:HI}
+greeting: ${greeting_message:HI}
 
 spring:
   cloud: 
