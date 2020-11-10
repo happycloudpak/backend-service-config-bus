@@ -1,0 +1,34 @@
+#!/bin/bash
+
+# get parameters
+if ([ $# -lt 1 ]) || ([ $# -eq 1 ] && [ "$1" == "-h" -o "$1" == "--help" ]); then
+  echo "run-cicd <profile>"
+  echo " 모든 CI/CD 명령을 수행합니다. 반드시, project root디렉토리에서 수행하십시오. "
+  echo " profile: 배포대상 환경 프로파일(ex:dev, prod)"  
+  echo " ex) ./run-cicd dev"
+  echo " ex) ./run-cicd prod"
+  exit 1
+fi
+
+username=happycloudpak
+password=happy@cloud
+context=.
+profile=$1
+basedir=.
+
+shell=run-all-with-config
+# download shell if it's not exists
+cmdpath=${basedir}/cicd/cmd
+
+which ${cmdpath}/${shell} 2> /dev/null
+if [ $? -eq 1 ]; then
+	mkdir -p ${cmdpath} 2> /dev/null
+	wget -O ${cmdpath}/${shell} https://happycloudpak.github.io/cicd-template/cmd/${shell}
+	if [ $? -eq 1 ]; then
+		echo "CAN'T download ${cmdpath}/${shell}"
+		exit 1
+	fi
+	chmod +x ${cmdpath}/${shell}
+fi
+
+${cmdpath}/${shell} ${username} ${password} ${context} ${profile} ${basedir}
