@@ -30,16 +30,13 @@ shell=run-all-with-config
 # download shell if it's not exists
 cmdpath=${basedir}/cicd/cmd
 
-which ${cmdpath}/${shell} 2> /dev/null
+mkdir -p ${cmdpath} 2> /dev/null
+wget -O ${cmdpath}/${shell} https://happycloudpak.github.io/cicd-template/cmd/${shell}
 if [ $? -eq 1 ]; then
-	mkdir -p ${cmdpath} 2> /dev/null
-	wget -O ${cmdpath}/${shell} https://happycloudpak.github.io/cicd-template/cmd/${shell}
-	if [ $? -eq 1 ]; then
-		echo "CAN'T download ${cmdpath}/${shell}"
-		exit 1
-	fi
-	echo "Download completed => ${cmdpath}/${shell}"
-	chmod +x ${cmdpath}/${shell}
+	echo "CAN'T download ${cmdpath}/${shell}"
+	exit 1
 fi
+echo "Download completed => ${cmdpath}/${shell}"
+chmod +x ${cmdpath}/${shell}
 
 ${cmdpath}/${shell} ${username} ${password} ${context} ${profile} ${basedir}
