@@ -1,20 +1,30 @@
 #!/bin/bash
 
 # get parameters
-if ([ $# -lt 1 ]) || ([ $# -eq 1 ] && [ "$1" == "-h" -o "$1" == "--help" ]); then
-  echo "run-cicd <profile>"
-  echo " 모든 CI/CD 명령을 수행합니다. 반드시, project root디렉토리에서 수행하십시오. "
-  echo " profile: 배포대상 환경 프로파일(ex:dev, prod)"  
-  echo " ex) ./run-cicd dev"
-  echo " ex) ./run-cicd prod"
-  exit 1
-fi
+read -p "# container image registry 로그인 username: " username
+read -p "# container image registry 로그인 password: " password
+read -p "# kubernetes context name(현재 context는 .): " context
+read -p "# 배포대상 프로파일(dev,prod중 선택): " profile
+read -p "# base directory(현재 directory는 .): " basedir
+if [ "${profile}" == "dev" ] || [ "${profile}" == "prod" ]; then
+	echo "#### Copy below commands #####"
+	echo "# Build & Deploy "
+	echo "${basedir}/cicd/cmd/run-all-with-config ${username} ${password} ${context} ${profile} ${basedir}"
+	echo "# Build only"
+	echo "${basedir}/cicd/cmd/build-image-with-config ${username} ${password} ${basedir}"
+	echo "# Deploy only"
+	echo "${basedir}/cicd/cmd/deploy-with-config ${context} ${profile} ${basedir}"
+	echo "# Clear all"
+	echo "${basedir}/cicd/cmd/clear-all-with-config ${basedir}"
+	echo ""
+	read -n 1 -p "# Do you want to continue?(y/n) ... " cont
+	echo ""
+	if [ "${cont}" != "y" ]; then exit 0; fi
 
-username=happycloudpak
-password=happy@cloud
-context=.
-profile=$1
-basedir=.
+else
+	echo "배포대상 profile은 dev 또는 prod여야 합니다."
+	exit 0
+fi
 
 shell=run-all-with-config
 # download shell if it's not exists
@@ -28,6 +38,7 @@ if [ $? -eq 1 ]; then
 		echo "CAN'T download ${cmdpath}/${shell}"
 		exit 1
 	fi
+	echo "Download completed => ${cmdpath}/${shell}"
 	chmod +x ${cmdpath}/${shell}
 fi
 
