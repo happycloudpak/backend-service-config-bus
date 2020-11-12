@@ -38,7 +38,7 @@ public class BackendController {
 	private int divisor;
 	private int calls = 0;
 	
-	@Value("${greeting}")
+	@Value("${greeting.message}")
 	private String greeting;
 	
 	@GetMapping("/port")

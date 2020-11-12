@@ -3,10 +3,8 @@ server:
   port: ${server_port:8001}
 call:
   divisor: ${call_divisor:0}
-runtime:
-  profile: ${runtime.profile}
-
-greeting: ${greeting_message:HI}
+greeting:
+  message: ${greeting_message:"HI"}
 
 spring:
   cloud: 
