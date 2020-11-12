@@ -1,11 +1,25 @@
 #!/bin/bash
 
+# MUST change urls properly
+DOWNLOAD_URI=https://happycloudpak.github.io/cicd-template
+JQ_DOWNLOAD_URL=https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64
+INGRESS_CONFIG_SERVER=config-server
+
 # get parameters
-read -p "# container image registry 로그인 username: " username
-read -p "# container image registry 로그인 password: " password
-read -p "# kubernetes context name(현재 context는 .): " context
-read -p "# 배포대상 프로파일(dev,prod중 선택): " profile
-read -p "# base directory(현재 directory는 .): " basedir
+if [ $# -eq 5 ]; then
+	username=$1
+	password=$2
+	context=$3
+	profile=$4
+	basedir=$5
+else
+	read -p "# container image registry 로그인 username: " username
+	read -p "# container image registry 로그인 password: " password
+	read -p "# kubernetes context name(현재 context는 .): " context
+	read -p "# 배포대상 프로파일(dev,prod중 선택): " profile
+	read -p "# base directory(현재 directory는 .): " basedir
+fi
+
 if [ "${profile}" == "dev" ] || [ "${profile}" == "prod" ]; then
 	echo "#### Copy below commands #####"
 	echo "# Build & Deploy "
@@ -26,12 +40,17 @@ else
 	exit 0
 fi
 
+# make shell for setting url values
+echo "DOWNLOAD_URI=${DOWNLOAD_URI}" > ${basedir}/cicd/cmd/url.ini
+echo "JQ_DOWNLOAD_URL=${JQ_DOWNLOAD_URL}" >> ${basedir}/cicd/cmd/url.ini
+echo "INGRESS_CONFIG_SERVER=${INGRESS_CONFIG_SERVER}" >> ${basedir}/cicd/cmd/url.ini
+
 shell=run-all-with-config
 # download shell if it's not exists
 cmdpath=${basedir}/cicd/cmd
 
 mkdir -p ${cmdpath} 2> /dev/null
-wget -O ${cmdpath}/${shell} https://happycloudpak.github.io/cicd-template/cmd/${shell}
+wget -O ${cmdpath}/${shell} ${DOWNLOAD_URI}/cmd/${shell}
 if [ $? -eq 1 ]; then
 	echo "CAN'T download ${cmdpath}/${shell}"
 	exit 1
