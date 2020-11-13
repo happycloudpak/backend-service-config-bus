@@ -6,26 +6,28 @@ JQ_DOWNLOAD_URL=https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux
 INGRESS_CONFIG_SERVER=config-server
 
 # get parameters
-if [ $# -eq 5 ]; then
+if [ $# -eq 6 ]; then
 	username=$1
 	password=$2
 	context=$3
 	profile=$4
 	basedir=$5
+	devlang=$6
 else
 	read -p "# container image registry 로그인 username: " username
 	read -p "# container image registry 로그인 password: " password
 	read -p "# kubernetes context name(현재 context는 .): " context
 	read -p "# 배포대상 프로파일(dev,prod중 선택): " profile
 	read -p "# base directory(현재 directory는 .): " basedir
+	read -p "# 개발언어(java/nodejs): " devlang
 fi
 
 if [ "${profile}" == "dev" ] || [ "${profile}" == "prod" ]; then
 	echo "#### Copy below commands #####"
 	echo "# Build & Deploy "
-	echo "${basedir}/cicd/cmd/run-all-with-config ${username} ${password} ${context} ${profile} ${basedir}"
+	echo "${basedir}/cicd/cmd/run-all-with-config ${username} ${password} ${context} ${profile} ${basedir} ${devlang}"
 	echo "# Build only"
-	echo "${basedir}/cicd/cmd/build-image-with-config ${username} ${password} ${basedir}"
+	echo "${basedir}/cicd/cmd/build-image-with-config ${username} ${password} ${basedir} ${devlang}"
 	echo "# Deploy only"
 	echo "${basedir}/cicd/cmd/deploy-with-config ${context} ${profile} ${basedir}"
 	echo "# Clear all"
@@ -58,4 +60,4 @@ fi
 echo "Download completed => ${cmdpath}/${shell}"
 chmod +x ${cmdpath}/${shell}
 
-${cmdpath}/${shell} ${username} ${password} ${context} ${profile} ${basedir}
+${cmdpath}/${shell} ${username} ${password} ${context} ${profile} ${basedir} ${devlang}
